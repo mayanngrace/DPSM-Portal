@@ -188,6 +188,7 @@
                         <th>
                             <select class="suffix-select form-select form-control suffix" aria-label="" id="accomplishment_type" name="" data-field="suffix" onchange="filter_accomplishments()" style="font-size: 1vw;">
                                 <option selected value="">All</option>
+                                <option value="Accomplishment">Accomplishment</option>
                                 <option value="Publication">Publication</option>
                                 <option value="Research Grant">Research Grant</option>
                                 <option value="Licensure Exam">Licensure Exam</option>
@@ -210,7 +211,21 @@
                         {% for accomplishment in faculty_accomplishments %}
                         <tr class="clickable" onclick="window.location='#'">
                             <th scope="row">{{accomplishment[2]}}, {{accomplishment[1]}}</th>
-                            <td><span id="">{{accomplishment[0]['type_contribution']}}</span></td>
+                            <td><span id="">
+                                {% if accomplishment[0]['type_contribution'] == "1" %}
+                                Accomplishments within UPM
+                                {% else %}
+                                    {% if accomplishment[0]['type_contribution'] == "2" %}
+                                    Contributions to Professions
+                                    {% else %}
+                                        {% if accomplishment[0]['type_contribution'] == "3" %}
+                                        Contributions to Nation
+                                        {% else %}
+                                        Contributions to World
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            </span></td>
                             <td><span id="">Accomplishment</span></td>
                             <td><span id="start_date">{{accomplishment[0]['start_date']}}</span></td>
                             <td><span id="end_date">{{accomplishment[0]['end_date']}}</span></td>
@@ -250,6 +265,18 @@
                             <td><span id="">Licensure Exam</span></td>
                             <td><span id="start_date">{{licensure[0]['date']}}</span></td>
                             <td><span id="end_date">{{licensure[0]['actual_end']}}</span></td>
+                        </tr>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if faculty_work is not none %}
+                        {% for work in faculty_work %}
+                        <tr class="clickable" onclick="window.location='#'">
+                            <th scope="row">{{work[2]}}, {{work[1]}}</th>
+                            <td><span id="">{{work[0]['title']}}</span></td>
+                            <td><span id="">Public Service</span></td>
+                            <td><span id="start_date">{{work[0]['start_date']}}</span></td>
+                            <td><span id="end_date">{{work[0]['end_date']}}</span></td>
                         </tr>
                         {% endfor %}
                     {% endif %}
