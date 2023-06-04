@@ -34,7 +34,7 @@ def load_user(user_id):
 def unit_head_view_faculty_info(user_id):
     faculty_personal_information = FacultyPersonalInformation.query.filter_by(user_id=user_id).first()
     faculty_educational_attaiment = EducationalAttainment.query.filter_by(user_id=user_id).all()
-    faculty_work_experience = WorkExperience.query.filter_by(user_id=user_id).all()
+    faculty_work = WorkExperience.query.filter_by(user_id=user_id).all()
     faculty_accomplishments = Accomplishment.query.filter_by(user_id=user_id).all()
     faculty_publications = Publication.query.filter_by(user_id=user_id).all()
     faculty_research_grants = ResearchGrant.query.filter_by(user_id=user_id).all()
@@ -55,7 +55,7 @@ def unit_head_view_faculty_info(user_id):
         'faculty/view_info.html',
         faculty_personal_information = faculty_personal_information,
         faculty_educational_attaiment = faculty_educational_attaiment,
-        faculty_work_experience = faculty_work_experience,
+        faculty_work = faculty_work,
         faculty_accomplishments = faculty_accomplishments,
         faculty_publications = faculty_publications,
         faculty_research_grants = faculty_research_grants,
@@ -376,6 +376,12 @@ def load_unit_head_dashboard():
     unit_label = str(current_user.unit.upper())
     print(unit_label)
 
+    faculty_work = (WorkExperience
+        .query
+        .join(FacultyPersonalInformation, WorkExperience.user_id == FacultyPersonalInformation.user_id)
+        .filter(FacultyPersonalInformation.unit == current_user.unit)
+        .add_columns(FacultyPersonalInformation.first_name, FacultyPersonalInformation.last_name)
+    ).all()
     faculty_accomplishments = (Accomplishment
         .query
         .join(FacultyPersonalInformation, Accomplishment.user_id == FacultyPersonalInformation.user_id)
@@ -413,6 +419,7 @@ def load_unit_head_dashboard():
             return render_template('unit_head/unit_head_dashboard.html', 
                 unit_count = unit_count,
                 unit_label = unit_label,
+                faculty_work = faculty_work,
                 faculty_accomplishments = faculty_accomplishments,
                 faculty_publications = faculty_publications,
                 faculty_research_grants = faculty_research_grants,
@@ -427,6 +434,13 @@ def load_unit_head_dashboard():
             max_date = dashboard_form.getlist('max_date')[0]
             print(f"max date: {max_date}")
 
+            faculty_work = (WorkExperience
+                .query
+                .join(FacultyPersonalInformation, WorkExperience.user_id == FacultyPersonalInformation.user_id)
+                .filter(FacultyPersonalInformation.unit == current_user.unit)
+                .filter(and_(WorkExperience.start_date >= min_date, WorkExperience.end_date <= max_date))
+                .add_columns(FacultyPersonalInformation.first_name, FacultyPersonalInformation.last_name)
+            ).all()
             faculty_accomplishments = (Accomplishment
                 .query
                 .join(FacultyPersonalInformation, Accomplishment.user_id == FacultyPersonalInformation.user_id)
@@ -468,6 +482,7 @@ def load_unit_head_dashboard():
 
             unit_count_filtered = [
                 len(faculty_publications),
+                len(faculty_work),
                 len(faculty_accomplishments),
                 len(faculty_trainings),
                 len(faculty_licensure_exams),
@@ -478,6 +493,7 @@ def load_unit_head_dashboard():
             return render_template('unit_head/unit_head_dashboard.html',
                 unit_count = unit_count_filtered,
                 unit_label = unit_label,
+                faculty_work = faculty_work,
                 faculty_accomplishments = faculty_accomplishments,
                 faculty_publications = faculty_publications,
                 faculty_research_grants = faculty_research_grants,

@@ -129,7 +129,7 @@
             let countChart = new Chart(accomplishmentChart, {
                 type:'bar', 
                 data:{
-                    labels:['Publication', 'Public Service', 'Trainings/Seminars', 'Licensure Exams', 'Research Grants'],
+                    labels:['Publication', 'Work Experience', 'Trainings/Seminars', 'Licensure Exams', 'Research Grants'],
                     datasets:[{
                         label:'MCSU',
                         data:acc_count_mcsu,
@@ -225,7 +225,7 @@
                                 <option value="Publication">Publication</option>
                                 <option value="Research Grant">Research Grant</option>
                                 <option value="Licensure Exam">Licensure Exam</option>
-                                <option value="Public Service">Public Service</option>
+                                <option value="Work Experience">Work Experience</option>
                                 <option value="Training/Seminar">Training/Seminar</option>
                             </select>
                         </th>
@@ -310,8 +310,9 @@
                         {% for work in faculty_work %}
                         <tr class="clickable" onclick="window.location='#'">
                             <th scope="row">{{work[2]}}, {{work[1]}}</th>
+                            <td><span id="">{{work[3]}}</span></td>
                             <td><span id="">{{work[0]['title']}}</span></td>
-                            <td><span id="">Public Service</span></td>
+                            <td><span id="">Work Experience</span></td>
                             <td><span id="start_date">{{work[0]['start_date']}}</span></td>
                             <td><span id="end_date">{{work[0]['end_date']}}</span></td>
                         </tr>

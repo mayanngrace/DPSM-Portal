@@ -45,6 +45,11 @@ def load_dept_head_dashboard():
             unit_count.append(record)
         total_count[unit] = unit_count
 
+    faculty_work = (WorkExperience
+        .query
+        .join(FacultyPersonalInformation, WorkExperience.user_id == FacultyPersonalInformation.user_id)
+        .add_columns(FacultyPersonalInformation.first_name, FacultyPersonalInformation.last_name, FacultyPersonalInformation.unit)
+    ).all()
     faculty_accomplishments = (Accomplishment
         .query
         .join(FacultyPersonalInformation, Accomplishment.user_id == FacultyPersonalInformation.user_id)
@@ -71,7 +76,8 @@ def load_dept_head_dashboard():
         .add_columns(FacultyPersonalInformation.first_name, FacultyPersonalInformation.last_name, FacultyPersonalInformation.unit)
     ).all()
     convert_unit([
-        faculty_accomplishments,
+            faculty_work,
+            faculty_accomplishments,
             faculty_publications,
             faculty_research_grants,
             faculty_licensure_exams,
@@ -85,6 +91,7 @@ def load_dept_head_dashboard():
                 acc_data_mcsu = total_count['mcsu'],
                 acc_data_physics = total_count['cu'],
                 acc_data_chemistry = total_count['pgu'],
+                faculty_work = faculty_work,
                 faculty_accomplishments = faculty_accomplishments,
                 faculty_publications = faculty_publications,
                 faculty_research_grants = faculty_research_grants,
@@ -104,6 +111,13 @@ def load_dept_head_dashboard():
             filtered_total_count = {}
             for unit in units:
                 print(f"checking {unit}")
+                faculty_work = (WorkExperience
+                    .query
+                    .join(FacultyPersonalInformation, WorkExperience.user_id == FacultyPersonalInformation.user_id)
+                    .filter(FacultyPersonalInformation.unit == unit)
+                    .filter(and_(WorkExperience.start_date >= min_date, WorkExperience.end_date <= max_date))
+                    .add_columns(FacultyPersonalInformation.first_name, FacultyPersonalInformation.last_name)
+                ).all()
                 faculty_accomplishments = (Accomplishment
                     .query
                     .join(FacultyPersonalInformation, Accomplishment.user_id == FacultyPersonalInformation.user_id)
@@ -140,6 +154,7 @@ def load_dept_head_dashboard():
                     .add_columns(FacultyPersonalInformation.first_name, FacultyPersonalInformation.last_name)
                 ).all()
                 # convert_unit([
+                #         faculty_work,
                 #         faculty_accomplishments,
                 #         faculty_publications,
                 #         faculty_research_grants,
@@ -152,6 +167,7 @@ def load_dept_head_dashboard():
 
                 unit_count_filtered = [
                     len(faculty_publications),
+                    len(faculty_work),
                     len(faculty_accomplishments),
                     len(faculty_trainings),
                     len(faculty_licensure_exams),
@@ -171,6 +187,7 @@ def load_dept_head_dashboard():
                 acc_data_mcsu = filtered_total_count['mcsu'],
                 acc_data_physics = filtered_total_count['cu'],
                 acc_data_chemistry = filtered_total_count['pgu'],
+                faculty_work = faculty_work,
                 faculty_accomplishments = faculty_accomplishments,
                 faculty_publications = faculty_publications,
                 faculty_research_grants = faculty_research_grants,
@@ -199,7 +216,7 @@ def convert_unit(info_list_list):
 def dept_head_view_faculty_info(user_id):
     faculty_personal_information = FacultyPersonalInformation.query.filter_by(user_id=user_id).first()
     faculty_educational_attaiment = EducationalAttainment.query.filter_by(user_id=user_id).all()
-    faculty_work_experience = WorkExperience.query.filter_by(user_id=user_id).all()
+    faculty_work = WorkExperience.query.filter_by(user_id=user_id).all()
     faculty_accomplishments = Accomplishment.query.filter_by(user_id=user_id).all()
     faculty_publications = Publication.query.filter_by(user_id=user_id).all()
     faculty_research_grants = ResearchGrant.query.filter_by(user_id=user_id).all()
@@ -220,7 +237,7 @@ def dept_head_view_faculty_info(user_id):
         'faculty/view_info.html',
         faculty_personal_information = faculty_personal_information,
         faculty_educational_attaiment = faculty_educational_attaiment,
-        faculty_work_experience = faculty_work_experience,
+        faculty_work = faculty_work,
         faculty_accomplishments = faculty_accomplishments,
         faculty_publications = faculty_publications,
         faculty_research_grants = faculty_research_grants,

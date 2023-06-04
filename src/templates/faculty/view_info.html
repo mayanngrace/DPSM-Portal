@@ -380,9 +380,9 @@
             </div>
 
             <hr>
-            {% if faculty_work_experience|length > 0 %}
-                {% for experience in faculty_work_experience %}
-                {% if experience['id'] not in faculty_rejected_info %}
+            {% if faculty_work|length > 0 %}
+                {% for work in faculty_work %}
+                {% if work['id'] not in faculty_rejected_info %}
                     <!-- box content -->
                     <div class="info-sub-section">
                         <div class="d-flex justify-content-between my-3">
@@ -395,20 +395,20 @@
                                     <div class="row">
                                         <div class="col-12 col-lg-6 custom-col-3 mb-3">
                                             <label class="col-form-label">Location<span class="required-field"></span></label>
-                                            <input class="form-control" type="text" id="location" name="location" value="{{experience['location']}}" disabled>
+                                            <input class="form-control" type="text" id="location" name="location" value="{{work['location']}}" disabled>
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-12 col-lg-6 custom-col-3 mb-3">
                                             <label class="col-form-label">Name of Employer<span class="required-field"></span></label>
-                                            <input class="form-control" type="text" id="name_employer" name="name_employer" value="{{experience['name_employer']}}" disabled>
+                                            <input class="form-control" type="text" id="name_employer" name="name_employer" value="{{work['name_employer']}}" disabled>
                                             <span class = "validation-status"></span>
                                         </div>  
 
                                         <div class="col-12 col-lg-6 custom-col-3 mb-3">
                                             <label class="col-form-label">Title/Position<span class="required-field"></span></label>
-                                            <input class="form-control" type="text" id="title" name="title" value="{{experience['title']}}" disabled>
+                                            <input class="form-control" type="text" id="title" name="title" value="{{work['title']}}" disabled>
                                             <span class = "validation-status"></span>
                                         </div>  
                                     </div>
@@ -416,13 +416,13 @@
                                     <div class="row">
                                         <div class="col-12 col-lg-6 custom-col-3 mb-3">
                                             <label class="col-form-label">Start Date<span class="required-field"></span></label>
-                                            <input class="form-control" type="date" id="start_date" name="start_date" value="{{experience['start_date']}}" disabled>
+                                            <input class="form-control" type="date" id="start_date" name="start_date" value="{{work['start_date']}}" disabled>
                                             <span class = "validation-status"></span>
                                         </div>   
                                         
                                         <div class="col-12 col-lg-6 custom-col-3 mb-3">
                                             <label class="col-form-label">End Date<span class="required-field"></span></label>
-                                            <input class="form-control" type="date" id="end_date" name="end_date" value="{{experience['end_date']}}" disabled>
+                                            <input class="form-control" type="date" id="end_date" name="end_date" value="{{work['end_date']}}" disabled>
                                             <span class = "validation-status"></span>
                                         </div>  
                                     </div>
@@ -430,7 +430,7 @@
                                     <div class="row">
                                         <div class="col-12 custom-col-3 mb-3">
                                             <label class="col-form-label">Description<span class="required-field"></span></label>
-                                            <textarea class="form-control" id="description" name="description" rows="4" cols="50" disabled>{{experience['description']}}</textarea>
+                                            <textarea class="form-control" id="description" name="description" rows="4" cols="50" disabled>{{work['description']}}</textarea>
                                             <span class = "validation-status"></span>
                                         </div>   
                                     </div>
@@ -446,8 +446,8 @@
                                                 {% endif %},
                                                 'WORK_PROOF',
                                                 '{{faculty_personal_information['user_id']}}',
-                                                '{{experience['last_modified']}}',
-                                                '{{experience['proof_ext']}}'
+                                                '{{work['last_modified']}}',
+                                                '{{work['proof_ext']}}'
                                             )">
                                                 View Work Experience Proof
                                             </button>    
